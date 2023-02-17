@@ -1,0 +1,71 @@
+// setting up the pins
+const int button_a = 3; // declaring pin 3 as button 1
+const int button_b = 5; // declaring pin 5 as button 2
+
+const int signal_A = 2; // declaring pin 2 as signal A or LED 1
+const int signal_B = 4; // declaring pin 4 as signal B or LED 2
+
+// variables to read from switches
+int read_button_a = 0; // declaring a variable to read from button a initially set as LOW
+int read_button_b = 0; // declaring a variable to read from button b initially set as LOW
+
+// setting up the parameters
+int a = 1300;       // parameter 'a' calculated as first letter*100 = 11*100 = 1300
+const int b = 100;  // parameter 'b' calculated as second letter*100 = 1*100 = 100
+const int c = 13;   // parameter 'c' calculated as third letter+4 = 9+4=13
+const int d = 2500; // parameter 'd' calculated as fourth letter*500 = 5*500 = 2500
+
+int r = 1950; // parameter used in mode '1' where we reverse the signal, hence highest value is a+(c-1)*b = 1950
+// mode is calculated as rem(fifth letter/4) + 1 = rem(4/4) + 1 = 1. Hence we use mode 1
+
+void setup()
+{
+  // put your setup code here, to run once:
+  pinMode(button_a, INPUT);  // setting button_a pin(button a) as INPUT
+  pinMode(button_b, INPUT);  // setting button_b pin(button b) as INPUT
+  pinMode(signal_A, OUTPUT); // setting signal_A pin(LED 1/signal A) as OUTPUT
+  pinMode(signal_B, OUTPUT); // setting signal_B pin(LED 2/signal B) as OUTPUT
+}
+
+void run_mode(int x, int increment)
+{
+  digitalWrite(signal_B, HIGH);
+  delay(50);
+  digitalWrite(signal_B, LOW);
+
+  for (int i = 0; i < c; i++)
+  {
+    digitalWrite(signal_A, HIGH);
+    delay(x);
+    digitalWrite(signal_A, LOW);
+    delay(b);
+
+    x = x + increment;
+  }
+  digitalWrite(signal_A, LOW);
+  delay(d);
+}
+
+void loop()
+{
+  // put your main code here, to run repeatedly:
+  read_button_a = digitalRead(button_a); // reading from button_a and storing it in read_button_a
+  read_button_b = digitalRead(button_b); // reading from button_b and storing it in read_button_b
+
+  if (read_button_a == HIGH) // using if else to
+  {
+    digitalWrite(signal_A, LOW);
+    digitalWrite(signal_B, LOW);
+  }
+  else
+  {
+    if (read_button_b == LOW)
+    {
+      run_mode(a, 50);
+    }
+    else
+    {
+      run_mode(r, -50);
+    }
+  }
+}
